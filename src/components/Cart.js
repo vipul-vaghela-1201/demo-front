@@ -99,7 +99,7 @@ const Cart = ({ orderId, cart, onOrder, onCheckout, onDownloadInvoice, onUpdateC
             </div>
           </div>
         ))}
-        <button onClick={onCheckout}>Checkout for Payment</button>
+        <button onClick={onCheckout}>Proceed to Checkout</button>
       </div>
       <p>Total Price: ${totalPrice}</p>
       <div>
