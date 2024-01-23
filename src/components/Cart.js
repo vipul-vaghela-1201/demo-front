@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import productImage1 from '../../src/image/img1.jpg';
 import axios from 'axios';
 
-const Cart = ({ orderId, cart, onOrder, onCheckout, onDownloadInvoice, onUpdateCart, paymentStatus, setPaymentStatus, setShipmentStatus  }) => {
+const Cart = ({ orderId, cart, onOrder, onCheckout, onDownloadInvoice, onUpdateCart, paymentStatus, setPaymentStatus, setShipmentStatus, setCart, setTotalPrice, setBillingAddress, setShipmentAddress, setShowAddressFields }) => {
   const [newOrderId, setNewOrderId] = useState(orderId);
   const [searchError, setSearchError] = useState('');
 
@@ -56,6 +56,11 @@ const Cart = ({ orderId, cart, onOrder, onCheckout, onDownloadInvoice, onUpdateC
           successful: true,
           orderId: newOrderId,
         });
+        setCart([]);
+        setTotalPrice(0);
+        setShipmentAddress('');
+        setBillingAddress('');
+        setShowAddressFields(false);
       })
       .catch(error => {
         console.error('Error checking order status:', error);

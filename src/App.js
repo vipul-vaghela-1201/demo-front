@@ -256,6 +256,11 @@ console.log(orderData);
           paymentStatus={paymentStatus}
           setPaymentStatus={setPaymentStatus}
           setShipmentStatus={setShipmentStatus }
+          setCart={setCart}
+          setTotalPrice={setTotalPrice}
+          setBillingAddress={setBillingAddress}
+          setShipmentAddress={setShipmentAddress}
+          setShowAddressFields={setShowAddressFields}
         />
         {showAddressFields && (
           <div>
