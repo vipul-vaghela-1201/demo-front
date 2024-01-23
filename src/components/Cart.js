@@ -1,4 +1,3 @@
-// Cart.js
 import React, { useState, useEffect } from 'react';
 import productImage1 from '../../src/image/img1.jpg';
 import axios from 'axios';
