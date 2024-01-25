@@ -24,10 +24,35 @@ const App = () => {
   const [shipmentAddress, setShipmentAddress] = useState('');
   const [billingAddress, setBillingAddress] = useState('');
   const [addressError, setAddressError] = useState('');
+  const [productImages, setProductImages] = useState([]);
   const [paymentStatus, setPaymentStatus] = useState({
     successful: false,
     orderId: '',
   });
+
+  useEffect(() => {
+    const fetchRandomImages = async () => {
+      try {
+        const imagePromises = products.map(product => {
+          const uniqueQuery = Math.random().toString(36).substring(7); // Unique query parameter
+          return `https://picsum.photos/200?${uniqueQuery}`;
+        });
+        const imageUrls = await Promise.all(imagePromises);
+  
+        await Promise.all(imageUrls.map(url => new Promise(resolve => {
+          const img = new Image();
+          img.src = url;
+          img.onload = resolve;
+        })));
+  
+        setProductImages(imageUrls);
+      } catch (error) {
+        console.error('Error fetching or preloading images from Picsum:', error);
+      }
+    };
+  
+    fetchRandomImages();
+  }, [products]);
 
   useEffect(() => {
     const existingSessionId = sessionStorage.getItem('sessionId');
@@ -55,13 +80,13 @@ const App = () => {
 
           const newSessionId = generateSessionId();
           setSessionId(newSessionId);
-console.log("here it created new session ID");
+
           sessionStorage.setItem('sessionId', newSessionId);
           axios.post('http://localhost:8080/api/sessions', {
             sessionId: newSessionId,
           })
           .then(response => console.log('New session created and stored in the database:', response.data))
-          .catch(error => console.error('Error cre    ating session:', error));
+          .catch(error => console.error('Error creating session:', error));
         });
     } else {
       const newSessionId = generateSessionId();
@@ -138,7 +163,7 @@ console.log("here it created new session ID");
           orderId: sessionId,
           totalAmount: cartData.price,
         };
-console.log(orderData);
+
         axios.post(`http://localhost:8080/api/orders`, orderData)
           .then(orderResponse => {
             console.log('Order created successfully:', orderResponse.data);
@@ -244,6 +269,7 @@ console.log(orderData);
         <ProductsList
           products={products}
           onAddToCart={handleAddToCart}
+          productImages={productImages}
         />
       </div>
       <div style={{ width: '40%', padding: '20px' }}>
@@ -262,6 +288,7 @@ console.log(orderData);
           setTotalPrice={setTotalPrice}
           setBillingAddress={setBillingAddress}
           setShipmentAddress={setShipmentAddress}
+          productImages={productImages}
           setShowAddressFields={setShowAddressFields}
         />
         {showAddressFields && (

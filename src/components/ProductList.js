@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import productImage1 from '../../src/image/img1.jpg';
 
-const ProductsList = ({ products, onAddToCart }) => {
+const ProductsList = ({ products, onAddToCart, productImages }) => {
   const [searchText, setSearchText] = useState('');
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searched, setSearched] = useState(false);
@@ -26,9 +25,9 @@ const ProductsList = ({ products, onAddToCart }) => {
         <button onClick={handleSearch}>Search</button>
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {(searched === true && searchText !== '' ? filteredProducts : products).map((product) => (
+        {(searched === true && searchText !== '' ? filteredProducts : products).map((product, index) => (
           <div key={product.id} style={{ margin: '10px', textAlign: 'center' }}>
-            <img src={productImage1} alt={product.name} style={{ width: '100px' }} />
+            <img src={productImages[index]} alt={product.name} style={{ width: '100px' }} />
             <p>{product.name}</p>
             <p>${product.price}</p>
             <button onClick={() => onAddToCart(product)}>Add to Cart</button>

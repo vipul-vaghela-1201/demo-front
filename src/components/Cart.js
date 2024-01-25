@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import productImage1 from '../../src/image/img1.jpg';
 import axios from 'axios';
 
-const Cart = ({ orderId, cart, onOrder, onCheckout, onDownloadInvoice, onUpdateCart, paymentStatus, setPaymentStatus, setShipmentStatus, setCart, setTotalPrice, setBillingAddress, setShipmentAddress, setShowAddressFields }) => {
+const Cart = ({ orderId, cart, onOrder, onCheckout, onDownloadInvoice, onUpdateCart, productImages, paymentStatus, setPaymentStatus, setShipmentStatus, setCart, setTotalPrice, setBillingAddress, setShipmentAddress, setShowAddressFields }) => {
   const [newOrderId, setNewOrderId] = useState(orderId);
   const [searchError, setSearchError] = useState('');
 
@@ -39,7 +38,6 @@ const Cart = ({ orderId, cart, onOrder, onCheckout, onDownloadInvoice, onUpdateC
         console.log('Order status response:', response.data);
 
         const createdAt = new Date(response.data.createdAt).getTime();
-
         const currentTime = new Date().getTime();
         const timeDifference = currentTime - createdAt;
 
@@ -71,7 +69,6 @@ const Cart = ({ orderId, cart, onOrder, onCheckout, onDownloadInvoice, onUpdateC
         });
       });
   };
-
   return (
     <div>
       <div>
@@ -85,11 +82,11 @@ const Cart = ({ orderId, cart, onOrder, onCheckout, onDownloadInvoice, onUpdateC
         {searchError && <p style={{ color: 'red' }}>{searchError}</p>}
       </div>
       <div>
-        <h2>Cart</h2>
+        {paymentStatus.successful === false && <h2>Cart</h2>}
         {cart.map((product) => (
           <div key={product.id} style={{ display: 'flex', alignItems: 'center' }}>
             <img
-              src={productImage1}
+              src={productImages[product.id - 1]}
               alt={product.name}
               style={{ width: '50px', marginRight: '10px' }}
             />
@@ -103,9 +100,12 @@ const Cart = ({ orderId, cart, onOrder, onCheckout, onDownloadInvoice, onUpdateC
             </div>
           </div>
         ))}
-        <button onClick={onCheckout}>Proceed to Checkout</button>
+        {cart.length > 0 && <button onClick={onCheckout}>Proceed to Checkout</button>}
+        {(cart.length === 0 && paymentStatus.successful === false) && <p>Cart is Empty. Please add an Item to cart</p>}
       </div>
+      {paymentStatus.successful === false && cart.length > 0 && (
       <p>Total Price: ${totalPrice}</p>
+      )}
       <div>
       {paymentStatus.successful && (
         <>
